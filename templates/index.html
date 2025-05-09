@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link href="https://fonts.googleapis.com/css2?family=Edu+QLD+Beginner&family=Montserrat&display=swap" rel="stylesheet">
+   <title>Emotion & Personality Analyzer</title>
+   <style>
+   * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+   }
+
+   html {
+      scroll-behavior: smooth;
+   }
+
+   body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #F5F5F0;
+      color: black;
+      line-height: 1.8;
+      padding: 30px;
+   }
+
+   .header {
+      text-align: center;
+      background-color: #F2D7D5;
+      color: black;
+      padding: 60px 20px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+   }
+   .header h1 {
+      font-size: 3rem;
+      font-family: 'Edu QLD Beginner', cursive;
+   }
+   .header p {
+      font-size: 1.2rem;
+      margin-top: 10px;
+      color: #3A3A3A;
+   }
+
+   nav {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 40px 0;
+   }
+   nav a {
+      padding: 12px 24px;
+      background-color: #A9D6E5;
+      color: black;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      transition: background-color 0.3s ease;
+   }
+   nav a:hover {
+      background-color: #89BACF;
+   }
+
+   .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #FFFFFF;
+      padding: 100px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+   }
+
+   section {
+      margin-bottom: 60px;
+      padding-top: 80px;
+   }
+
+   section h2 {
+      font-family: 'Edu QLD Beginner', cursive;
+      font-size: 2rem;
+      text-align: center;
+      color: black;
+      margin-bottom: 40px;
+   }
+
+   .instructions {
+      text-align: center;
+      margin-bottom: 24px;
+      color: #555;
+   }
+
+   input[type="text"], textarea {
+      width: 100%;
+      padding: 16px;
+      margin: 16px 0 32px;
+      border: 1px solid #C4C4C4;
+      border-radius: 6px;
+      background-color: #F2F3F2;
+      color: black;
+      font-size: 1rem;
+   }
+
+   button {
+      width: 100%;
+      padding: 16px;
+      background-color: #F2D7D5;
+      color: black;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+   }
+   button:hover {
+      background-color: #89BACF;
+   }
+
+   .results {
+      margin-top: 40px;
+      background: #E7F1EA;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+   }
+   .results h3 {
+      margin-bottom: 16px;
+      color: black;
+   }
+   .results li {
+      background: #F0F6F8;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      color: black;
+   }
+
+   .webcam-btn {
+      margin-top: 20px;
+      display: block;
+      width: 100%;
+      padding: 16px;
+      background-color: #F2D7D5;
+      color: black;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+   }
+   .webcam-btn:hover {
+      background-color: #89BACF;
+   }
+
+   .error {
+      color: #C0392B;
+      font-weight: bold;
+      margin-top: 10px;
+   }
+   </style>
+</head>
+<body>
+
+   <div class="header">
+       <h1>Emotion & Personality Analyzer</h1>
+       <p>Analyze emotions from text or face, and discover your personality traits!</p>
+   </div>
+
+   <nav>
+       <a href="#text-analysis">Text</a>
+       <a href="#personality-analysis">Personality</a>
+       <a href="#face-analysis">Facial</a>
+   </nav>
+
+   <div class="container">
+       <section id="text-analysis">
+           <h2>Text Emotion Analysis</h2>
+           <p class="instructions">Enter a short text to analyze emotion.</p>
+           <form method="POST">
+               <input type="text" name="text_input" placeholder="Your text here..." required>
+               <button type="submit">Analyze Text</button>
+           </form>
+           {% if text_result %}
+           <div class="results">
+               <h3>Recommendations:</h3>
+               <ul>
+                   {% for rec in text_result['recommendations'] %}
+                   <li>{{ rec }}</li>
+                   {% endfor %}
+               </ul>
+           </div>
+           {% endif %}
+       </section>
+
+       <section id="personality-analysis">
+           <h2>Personality Analysis</h2>
+           <p class="instructions">Write a little about yourself for analysis.</p>
+           <form method="POST">
+               <textarea name="personality_input" placeholder="Something about you..." required></textarea>
+               <button type="submit">Analyze Personality</button>
+           </form>
+           {% if personality_result %}
+           <div class="results">
+               <h3>Personality Analysis:</h3>
+               <ul>
+                   <li><strong>Sentiment Analysis:</strong> {{ personality_result["Sentiment Analysis"] }}</li>
+                   {% for trait, desc in personality_result["Personality Traits"].items() %}
+                   <li><strong>{{ trait }}:</strong> {{ desc }}</li>
+                   {% endfor %}
+               </ul>
+           </div>
+           {% endif %}
+       </section>
+
+       <section id="face-analysis">
+           <h2>Face Emotion Analysis</h2>
+           <p class="instructions">Press the button to open your webcam and analyze your face.</p>
+           <form method="POST">
+               <button type="submit" name="face_analysis" class="webcam-btn">Open Webcam & Analyze Face</button>
+           </form>
+              <p style="text-align: center;">press <b>q</b> to capture image and <b>s</b> to close webcam</p>
+
+           {% if face_result %}
+           <div class="results">
+               <h3>Recommendations:</h3>
+               <ul>
+                   {% for rec in face_result['recommendations'] %}
+                   <li>{{ rec }}</li>
+                   {% endfor %}
+               </ul>
+           </div>
+           {% endif %}
+       </section>
+   </div>
+
+</body>
+</html>

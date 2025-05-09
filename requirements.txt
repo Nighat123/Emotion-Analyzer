@@ -1,0 +1,7 @@
+Flask
+scikit-learn
+pandas
+deepface
+opencv-python
+textblob
+numpy
